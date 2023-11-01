@@ -29,8 +29,9 @@ public:
     }
     //Вычисляем полином Ньютона по схеме Горнера
     yType interpolate(const xType& x) const noexcept {
-        yType sum = 0;
-        for (int i = N-1; i > 0; i--) {
+        yType sum = Y[N-1];
+        sum *= (x - X[N - 2]);
+        for (int i = N-2; i > 0; i--) {
             sum += Y[i];
             sum *= (x - X[i - 1]);
         }
@@ -47,7 +48,7 @@ public:
 int main() {
    
     const unsigned int N = 5; // число узлов
-    std::ofstream fout("5points.txt");
+    std::ofstream fout("5points_new.txt");
     
 
     for (int k = 1; k > (-5); k--) {
