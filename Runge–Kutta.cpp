@@ -1,4 +1,4 @@
-// RunK.cpp: определяет точку входа для приложения.
+// RunK.cpp: Г®ГЇГ°ГҐГ¤ГҐГ«ГїГҐГІ ГІГ®Г·ГЄГі ГўГµГ®Г¤Г  Г¤Г«Гї ГЇГ°ГЁГ«Г®Г¦ГҐГ­ГЁГї.
 //
 
 
@@ -13,7 +13,7 @@ double T3(double t, double y) {
     return pow(t, 3);
 }
 
-/* Это таблица Бутчера для метода Рунге-Кутты 4 порядка. Я ее заполнил */
+/* ГќГІГ® ГІГ ГЎГ«ГЁГ¶Г  ГЃГіГІГ·ГҐГ°Г  Г¤Г«Гї Г¬ГҐГІГ®Г¤Г  ГђГіГ­ГЈГҐ-ГЉГіГІГІГ» 4 ГЇГ®Г°ГїГ¤ГЄГ . Гџ ГҐГҐ Г§Г ГЇГ®Г«Г­ГЁГ« */
 struct RK4Table {
     static constexpr unsigned int stages = 4;
     static constexpr std::array<std::array<double, stages>, stages> table = { { {0., 0., 0., 0.}, {0.5, 0., 0., 0.}, {0., 0.5, 0., 0.}, {0., 0., 1., 0.} } };
@@ -26,18 +26,18 @@ class RightPartT3 {
 
 public:
 
-    static constexpr unsigned int dim = 1;  // размерность задачи
+    static constexpr unsigned int dim = 1;  // Г°Г Г§Г¬ГҐГ°Г­Г®Г±ГІГј Г§Г Г¤Г Г·ГЁ
 
-    using Argument = double;  // тип аргумента, тип t
+    using Argument = double;  // ГІГЁГЇ Г Г°ГЈГіГ¬ГҐГ­ГІГ , ГІГЁГЇ t
 
-    using State = Eigen::Vector<double, dim>;  // состояние
+    using State = Eigen::Vector<double, dim>;  // Г±Г®Г±ГІГ®ГїГ­ГЁГҐ
 
     struct StateAndArg {
         State state; // y
         Argument arg; // t
     };
 
-    /*** Вычисляет правую часть ДУ - функцию f***/
+    /*** Г‚Г»Г·ГЁГ±Г«ГїГҐГІ ГЇГ°Г ГўГіГѕ Г·Г Г±ГІГј Г„Г“ - ГґГіГ­ГЄГ¶ГЁГѕ f***/
     Eigen::Vector<double, dim> calc(const StateAndArg& stateAndArg) const {
         
 
@@ -47,24 +47,24 @@ public:
 };
 
 
-//правая часть для y'' = -y ...
+//ГЇГ°Г ГўГ Гї Г·Г Г±ГІГј Г¤Г«Гї y'' = -y ...
 class RightPartY {
 
 
 public:
 
-    static constexpr unsigned int dim = 2;  // размерность задачи
+    static constexpr unsigned int dim = 2;  // Г°Г Г§Г¬ГҐГ°Г­Г®Г±ГІГј Г§Г Г¤Г Г·ГЁ
 
-    using Argument = double;  // тип аргумента, тип t
+    using Argument = double;  // ГІГЁГЇ Г Г°ГЈГіГ¬ГҐГ­ГІГ , ГІГЁГЇ t
 
-    using State = Eigen::Vector<double, dim>;  // состояние
+    using State = Eigen::Vector<double, dim>;  // Г±Г®Г±ГІГ®ГїГ­ГЁГҐ
 
     struct StateAndArg {
         State state; // y, x
         Argument arg; // t
     };
 
-    /*** Вычисляет правую часть ДУ - функцию f***/
+    /*** Г‚Г»Г·ГЁГ±Г«ГїГҐГІ ГЇГ°Г ГўГіГѕ Г·Г Г±ГІГј Г„Г“ - ГґГіГ­ГЄГ¶ГЁГѕ f***/
     Eigen::Vector<double, dim> calc(const StateAndArg& stateAndArg) const {
 
         return Eigen::Vector<double, dim>{stateAndArg.state(1), -stateAndArg.state(0)};
@@ -72,9 +72,9 @@ public:
     }
 };
 
-// Сигнатура для метода интегрирования:
+// Г‘ГЁГЈГ­Г ГІГіГ°Г  Г¤Г«Гї Г¬ГҐГІГ®Г¤Г  ГЁГ­ГІГҐГЈГ°ГЁГ°Г®ГўГ Г­ГЁГї:
 
-template<typename Table, typename RHS>  // таблица бутчера и класс правой части f
+template<typename Table, typename RHS>  // ГІГ ГЎГ«ГЁГ¶Г  ГЎГіГІГ·ГҐГ°Г  ГЁ ГЄГ«Г Г±Г± ГЇГ°Г ГўГ®Г© Г·Г Г±ГІГЁ f
 std::vector<typename RHS::StateAndArg> integrate(const typename RHS::StateAndArg& initialState,
     const typename RHS::Argument& endTime,
     double step,
@@ -119,12 +119,12 @@ std::vector<typename RHS::StateAndArg> integrate(const typename RHS::StateAndArg
 };
 
 /*
-Задание:
+Г‡Г Г¤Г Г­ГЁГҐ:
 
-Реализовать интегрирование для задач Коши: y' = t^3, y(0) = 0, y'' = - y, y(0) = 0, y'(0) = 1.
-Провести интегрирование на отрезке [0, 5] классическим методом Рунге-Кутты четвертого порядка
-Построить зависимость ошибки (максимальная раность по всем точкам) от шага интегрирования в логарифмическом масштабе.
-Вычислить угол наклона прямой.
+ГђГҐГ Г«ГЁГ§Г®ГўГ ГІГј ГЁГ­ГІГҐГЈГ°ГЁГ°Г®ГўГ Г­ГЁГҐ Г¤Г«Гї Г§Г Г¤Г Г· ГЉГ®ГёГЁ: y' = t^3, y(0) = 0, y'' = - y, y(0) = 0, y'(0) = 1.
+ГЏГ°Г®ГўГҐГ±ГІГЁ ГЁГ­ГІГҐГЈГ°ГЁГ°Г®ГўГ Г­ГЁГҐ Г­Г  Г®ГІГ°ГҐГ§ГЄГҐ [0, 5] ГЄГ«Г Г±Г±ГЁГ·ГҐГ±ГЄГЁГ¬ Г¬ГҐГІГ®Г¤Г®Г¬ ГђГіГ­ГЈГҐ-ГЉГіГІГІГ» Г·ГҐГІГўГҐГ°ГІГ®ГЈГ® ГЇГ®Г°ГїГ¤ГЄГ 
+ГЏГ®Г±ГІГ°Г®ГЁГІГј Г§Г ГўГЁГ±ГЁГ¬Г®Г±ГІГј Г®ГёГЁГЎГЄГЁ (Г¬Г ГЄГ±ГЁГ¬Г Г«ГјГ­Г Гї Г°Г Г­Г®Г±ГІГј ГЇГ® ГўГ±ГҐГ¬ ГІГ®Г·ГЄГ Г¬) Г®ГІ ГёГ ГЈГ  ГЁГ­ГІГҐГЈГ°ГЁГ°Г®ГўГ Г­ГЁГї Гў Г«Г®ГЈГ Г°ГЁГґГ¬ГЁГ·ГҐГ±ГЄГ®Г¬ Г¬Г Г±ГёГІГ ГЎГҐ.
+Г‚Г»Г·ГЁГ±Г«ГЁГІГј ГіГЈГ®Г« Г­Г ГЄГ«Г®Г­Г  ГЇГ°ГїГ¬Г®Г©.
 */
 
 
