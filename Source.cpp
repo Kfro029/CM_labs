@@ -2,9 +2,9 @@
 #include <cmath>
 #include <vector>
 
-int k = 1; // параметр k в ГУ
+int k = 1; // ГЇГ Г°Г Г¬ГҐГІГ° k Гў ГѓГ“
 float L = 1.0;
-int step = 100; // число шагов в задаче (шаг дискретизации)
+int step = 100; // Г·ГЁГ±Г«Г® ГёГ ГЈГ®Гў Гў Г§Г Г¤Г Г·ГҐ (ГёГ ГЈ Г¤ГЁГ±ГЄГ°ГҐГІГЁГ§Г Г¶ГЁГЁ)
 
 float rho(int n) {
 	return(sin(k * 2 * 3.14 * (n / step) / L));
@@ -13,18 +13,18 @@ float rho(int n) {
 
 
 int main() {
-	// fi - неизв, rho = sin(2pikx/L)
+	// fi - Г­ГҐГЁГ§Гў, rho = sin(2pikx/L)
 	// eps0 = 1
 
-	// Из ГУ fi_1 = 2(pi)kh/L
+	// Г€Г§ ГѓГ“ fi_1 = 2(pi)kh/L
 	// fi_(n-1) = 2(pi)kh*cos(2pik)/L-pow(2(pi)kh/L, 2)sin(2pik)/2
 
-	//Надо найти alpha, beta
+	//ГЌГ Г¤Г® Г­Г Г©ГІГЁ alpha, beta
 
 	std::vector<float> al;
 	std::vector<float> bt;
 
-	std::vector<float> fi; //искомый
+	std::vector<double> fi(step + 1, 0.0);
 
 	fi.reserve(step + 1);
 	fi[step] = 0;
@@ -36,7 +36,7 @@ int main() {
 	bt.push_back(rho(0));
 
 
-	//прямой ход прогонки
+	//ГЇГ°ГїГ¬Г®Г© ГµГ®Г¤ ГЇГ°Г®ГЈГ®Г­ГЄГЁ
 	float y = 2.0;
 	for (int i = 2; i < step - 1; i++) {
 		y = 2 + al[al.size() - 1];
@@ -47,10 +47,10 @@ int main() {
 	bt.push_back((rho(step) - bt[bt.size() - 1]) / y);
 
 
-	//обратная прогонка
+	//Г®ГЎГ°Г ГІГ­Г Гї ГЇГ°Г®ГЈГ®Г­ГЄГ 
 	fi.reserve(step + 1);
 	for (int i = step - 2; i > 1; i--) {
-		fi[i] = al[i] * fi[i + 1] + bt[i];
+		fi[i] = al[i -1] * fi[i + 1] + bt[i - 1];
 	}
 
 
